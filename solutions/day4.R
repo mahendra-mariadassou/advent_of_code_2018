@@ -28,21 +28,17 @@ format_input <- function(x) {
   x %>% 
     tibble(raw = .) %>% 
     mutate(time      = str_replace_all(raw, "\\[|\\].*", "") %>% ymd_hm(), 
-           new.guard = str_detect(raw, "Guard"), 
            guard     = str_extract(raw, "Guard #[0-9]*") %>% str_remove("Guard #") %>% as.integer(), 
            sleeps    = str_detect(raw, "falls asleep"), 
            wakes     = str_detect(raw, "wakes"), 
            minute    = minute(time)) %>% 
     arrange(time) %>% 
-    mutate(block = cumsum(new.guard)) %>% 
+    mutate(block = cumsum(!is.na(guard))) %>% 
     group_by(block) %>% 
-    nest() %>% 
-    mutate(guard     = map_int(data, ~ .$guard[1]),
-           data      = map(data, ~ .[-1, ]), 
-           day       = map(data, ~ round_date(.$time[1], unit = "day"))) %>% 
-    unnest(day) %>% 
-    mutate(intervals = map(data, ~ tibble(start = .$minute[.$sleeps], end = .$minute[.$wakes]))) %>% 
-    unnest(intervals)
+    mutate(guard = guard[1], event = (1:n()) %/% 2, type = if_else(sleeps, "start", "end")) %>%
+    filter(event > 0) %>% 
+    select(guard, minute, event, type, block) %>% 
+    spread(key = type, value = minute)
 }
 
 solve_problem_1 <- function(input) {
