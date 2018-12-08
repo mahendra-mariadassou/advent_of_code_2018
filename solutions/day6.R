@@ -60,21 +60,21 @@ compute_total_distance <- function(input, margin = 1) {
   test.area
 }
 
-solve_problem_1 <- function(input) {
+solve_problem_1_old <- function(input) {
   find_areas(input) %>% 
     filter(area == extended.area) %>% 
     pull(area) %>% 
     max()
 }
 
-solve_problem_2 <- function(input, threshold) {
+solve_problem_2_old <- function(input, threshold) {
   compute_total_distance(input) %>% 
     filter(total.distance < threshold) %>% 
     nrow()
 }
 
 ## Try pure tidyverse solutions
-solve_problem_1_bis <- function(input) {
+solve_problem_1 <- function(input) {
   create_area(input) %>% 
     mutate(centers = list(input)) %>% 
     unnest(centers) %>%
@@ -94,7 +94,7 @@ solve_problem_1_bis <- function(input) {
 }
 
 
-solve_problem_2_bis <- function(input, threshold) {
+solve_problem_2 <- function(input, threshold) {
   create_area(input) %>% 
     mutate(centers = list(input)) %>% 
     unnest(centers) %>%
@@ -105,12 +105,12 @@ solve_problem_2_bis <- function(input, threshold) {
     nrow()
 }
 
-solve_problem_1(test) ## 0.26s
-solve_problem_1_bis(test) ## 0.21s
-solve_problem_1(input) ## 184s
-system.time(solve_problem_1_bis(input)) ## 184s
+# solve_problem_1_old(test) ## 0.26s
+# solve_problem_1(test) ## 0.21s
+# solve_problem_1_old(input) ## 184s
+solve_problem_1(input) ## 8s
 
-solve_problem_2(test, 32) ## 0.079s
-solve_problem_2_bis(test, 32) ## 0.025s
-solve_problem_2(input, 10000) # 71s
-solve_problem_2_bis(input, 10000) # 3s
+# solve_problem_2_old(test, 32) ## 0.079s
+# solve_problem_2(test, 32) ## 0.025s
+# solve_problem_2_old(input, 10000) # 71s
+solve_problem_2(input, 10000) # 3s

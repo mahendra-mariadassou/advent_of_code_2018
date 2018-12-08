@@ -16,8 +16,6 @@ checksum <- function(box.ids) {
     prod()
 }
 
-system.time(checksum(input))
-
 ## Day 2 - variant
 test <- c("abcde",
           "fghij",
@@ -27,7 +25,7 @@ test <- c("abcde",
           "axcye",
           "wvxyz")
 
-find_duplicate <- function(input) {
+find_duplicate_old <- function(input) {
   n <- length(input)
   crossing(i = 1:n, j = 1:n) %>% 
     filter(i < j) %>% 
@@ -41,11 +39,11 @@ find_duplicate <- function(input) {
     pull(subset)
 }
 
-system.time(find_duplicate(input))
+## find_duplicate_old(input)
 
 ## Day 2 - variant inspired by @abichat (and much more efficient)
 
-find_duplicate_2 <- function(input) {
+find_duplicate <- function(input) {
   N <- str_count(input[1])
   tibble(position = 1:N) %>% 
     mutate(sub_words = map(position, ~ str_c(str_sub(input, 0, . - 1), str_sub(input, . + 1, N)))) %>% 
@@ -56,4 +54,4 @@ find_duplicate_2 <- function(input) {
     pull(sub_words)
 }
 
-system.time(find_duplicate_2(input))
+find_duplicate(input)

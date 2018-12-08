@@ -43,7 +43,7 @@ count_conflicts <- function(x) {
   sum(fabric(x) > 1)
 }
 
-count_conflicts(test) ## 4
+## count_conflicts(test) ## 4
 count_conflicts(input) ## 110891
 
 ## Problem 2
@@ -57,5 +57,5 @@ find_non_overlapping <- function(x) {
     filter(!overlapping)
 }
 
-find_non_overlapping(test)
+## find_non_overlapping(test)
 find_non_overlapping(input) ## 0.045s, claim 297

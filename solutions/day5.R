@@ -20,8 +20,7 @@ solve_problem_1 <- function(input) {
   input %>% chain_reaction %>% nchar
 }
 
-solve_problem_1(test)
-
+## solve_problem_1(test)
 solve_problem_1(input)
 
 ## Problem 2
@@ -33,6 +32,5 @@ solve_problem_2 <- function(input) {
            size    = nchar(endpoly))
 }
   
-solve_problem_2(test) %>% arrange(size) %>% slice(1) %>% pull(size) ## 4
-  
+## solve_problem_2(test) %>% arrange(size) %>% slice(1) %>% pull(size) ## 4
 solve_problem_2(input) %>% arrange(size) %>% slice(1) %>% pull(size) ## 21.7s, 6336
