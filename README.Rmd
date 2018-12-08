@@ -1,0 +1,46 @@
+---
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", out.width = "90%")
+```
+
+# Advent of code 2018
+
+Solutions of [Advent of Code 2018](https://adventofcode.com/2018) with R using only base and tidyverse functions.
+Figure heavily borrowed from @abichat [repo](https://github.com/abichat/adventofcode2018)
+
+<br>
+```{r libraries, echo=FALSE, message=FALSE}
+library(tidyverse)
+library(tictoc)
+```
+
+```{r time, echo=FALSE, message=FALSE, warning=FALSE}
+time_script <- function(script) {
+  env <- new.env()
+  tic()
+  source(script, local = env)
+  t <- toc(quiet = TRUE)
+  return(unname(round(t$toc - t$tic, 2)))
+}
+df_time <-
+  list.files(path = "solutions", full.names = T) %>% 
+  tibble(Script = .) %>% 
+  filter(str_detect(Script, "day.*")) %>% 
+  mutate(Day = as.numeric(str_extract(Script, "[0-9]+")),
+         Time = map_dbl(Script, time_script))
+```
+
+```{r plottime, echo=FALSE, message=FALSE, dpi=300}
+df_time %>% 
+  ggplot() +
+  aes(x = Day, y = Time) + 
+  geom_col(fill = "#FFFB7C", col = "#0C1021") +
+  geom_text(aes(label = Time), nudge_y = 2, size = 2) +
+  scale_x_continuous(breaks = 1:25, limits = c(0.5, 25.5), minor_breaks = NULL) +
+  scale_y_continuous(minor_breaks = NULL) +
+  labs(y = "Time (in seconds)", title = "Running time per puzzle") +
+  theme_minimal()
+```
