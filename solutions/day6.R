@@ -78,15 +78,20 @@ solve_problem_1 <- function(input) {
   create_area(input) %>% 
     mutate(centers = list(input)) %>% 
     unnest(centers) %>%
-    mutate(dist = abs(i - x) + abs(j - y)) %>%
+    mutate(dist = abs(i - x) + abs(j - y), 
+           x = NULL, 
+           y = NULL) %>% 
     group_by(i, j) %>%
-    summarise(cvx.hull       = cvx.hull[1], 
-              min.dist       = min(dist), 
-              n.neighbors    = sum(dist == min.dist), 
-              closest.center = which.min(dist)) %>%
-    filter(n.neighbors == 1) %>%
+    mutate(center   = row_number(),
+           min.dist = min(dist)) %>%
+    ## Keep only closest centers
+    filter(dist == min.dist) %>%
+    summarize(cvx.hull       = first(cvx.hull),
+              closest.center = first(center),
+              valid          = n() == 1) %>%
+    filter(valid) %>%
     group_by(closest.center, add = FALSE) %>% 
-    summarize(area         = sum(cvx.hull), 
+    summarize(area          = sum(cvx.hull), 
               extended.area = n()) %>% 
     filter(area == extended.area) %>% 
     pull(area) %>% 
@@ -108,7 +113,7 @@ solve_problem_2 <- function(input, threshold) {
 # solve_problem_1_old(test) ## 0.26s
 # solve_problem_1(test) ## 0.21s
 # solve_problem_1_old(input) ## 184s
-solve_problem_1(input) ## 8s
+solve_problem_1(input) ## 6.5s
 
 # solve_problem_2_old(test, 32) ## 0.079s
 # solve_problem_2(test, 32) ## 0.025s
