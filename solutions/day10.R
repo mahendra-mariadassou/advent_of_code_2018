@@ -56,7 +56,13 @@ compute_density <- function(x, time.span = 1:10) {
 }
 
 ## plotdata <- compute_density(test)
-plotdata <- compute_density(input, time = 1:10000)
+plotdata <- compute_density(input, time = 9000:11000)
 ggplot(plotdata, aes(x = time, y = density)) + geom_line()
 
-ggplot(plotdata %>% pull(data) %>% `[[`(3), aes(x = x, y = y)) + geom_tile() + theme_minimal()
+index <- plotdata %>% pull(density) %>% which.max()
+time <- plotdata %>% arrange(desc(density)) %>% pull(time) %>% first()
+
+ggplot(plotdata %>% pull(data) %>% `[[`(index), aes(x = x, y = y)) + 
+  geom_tile() + 
+  coord_equal() + 
+  theme_minimal()
